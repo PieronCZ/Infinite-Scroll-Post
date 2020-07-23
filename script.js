@@ -33,30 +33,48 @@ async function showPosts() {
 
     postsContainer.appendChild(postEl);
   });
-  
+}
+
+// Filter posts by input
+function filterPosts(e) {
+  const term = e.target.value.toUpperCase();
+  const posts = document.querySelectorAll(".post");
+
+  posts.forEach((post) => {
+    const title = post.querySelector(".post-title").innerText.toUpperCase();
+    const body = post.querySelector(".post-body").innerText.toUpperCase();
+
+    if (title.indexOf(term) > -1 || body.indexOf(term) > -1) {
+      post.style.display = "flex";
+    } else {
+      post.style.display = "none";
+    }
+  });
 }
 
 // Show loader & fetch more posts
 function showLoading() {
-    loading.classList.add('show');
-    
+  loading.classList.add("show");
+
+  setTimeout(() => {
+    loading.classList.remove("show");
     setTimeout(() => {
-        loading.classList.remove('show');
-        setTimeout(() => {
-            page++;
-            showPosts();
-        }, 300);
-    }, 1000);
-    
+      page++;
+      showPosts();
+    }, 300);
+  }, 1000);
 }
 
 showPosts();
 
 // Show next post - infinite scrolling
-window.addEventListener('scroll', () => {
-    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+window.addEventListener("scroll", () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
-    if(scrollTop + clientHeight >= scrollHeight - 5) {
-        showLoading();
-    }
+  if (scrollTop + clientHeight >= scrollHeight - 5) {
+    showLoading();
+  }
 });
+
+// Searching
+filter.addEventListener("input", filterPosts);
